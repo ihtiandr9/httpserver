@@ -3,6 +3,12 @@
 #include <iostream>
 using namespace httplib;
 
+std::string greetingPage()
+{
+    std::string page = "<html><body><div style=\"font-size: 50;\">Hello World!</div><img src=\"/logoimg\"></body></html>";
+    return page;
+}
+
 int main(void)
 {
     Server svr;
@@ -10,26 +16,40 @@ int main(void)
     svr.Get("/hi", [](const Request &req, Response &res)
     {
         // По запросу к адресу "/hi" Вернуть текст как страницу
+        std::cout << "Get /hi root subcommand\n"; //FIXME debug
         std::string s;
-        s = "Hello World!\n";
+        s = greetingPage();
         for (auto p : req.params)
         {
             std::cout<<p.first<<":"<<p.second<<std::endl;
             s+= p.first + ":" + p.second + "\n";
         }
-
-        res.set_content(s, "text/plain");
+        res.set_content(s, "text/html");
     });
 
     svr.Get("/", [](const Request &req, Response &res)
     {
         // По запросу к адресу "/" Вернуть текст как страницу
+        std::cout << "Get root of site req\n";     //FIXME debug
         res.set_content("Main Pages!", "text/plain"); //Текст для возврата и формат
+        for (auto p : req.params)
+        {
+            std::cout<<p.first<<":"<<p.second<<std::endl;
+        }
+    });
+    ////////////////////////////////////////////////////////
+    svr.Get("/[a-z]+", [](const Request &req, Response &res)
+    {
+    std::cout << "unrecognized command to root\n";  //FIXME debug
+        // Other unrecognized commands to root
+        res.set_content("Unrecognized command to root Page!", "text/plain"); //Текст для возврата и формат
+        for (auto p : req.params)
+        {
+            std::cout<<p.first<<":"<<p.second<<std::endl;
+        }
     });
 
     //Команда запускает цикл так что в реальных проектах в отдельный процесс её
     svr.listen("0.0.0.0", 8080); //  listen port 8080
 
-    //Проверок не делаем , по этому если программа просто завершала роботу то нужно использовать правильный ип
-    //список можно получить командой в консоли ipconfig берем ип lan иле wlan
 }
