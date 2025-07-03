@@ -47,6 +47,9 @@ int main(void)
         {
             std::cout<<p.first<<":"<<p.second<<std::endl;
         }
+        std::cout<<"Path: "<<req.path<<std::endl;
+        std::cout<<"Method: "<<req.method<<std::endl;
+        std::cout<<"Target: "<<req.target<<std::endl;
     });
 
     //Команда запускает цикл так что в реальных проектах в отдельный процесс её
