@@ -3,9 +3,35 @@
 #include <iostream>
 using namespace httplib;
 
-std::string greetingPage()
+std::string stylesheet()
 {
-    std::string page = "<html><body><div style=\"font-size: 50;\">Hello World!</div><img src=\"/logoimg\"></body></html>";
+    std::string styles = ""
+        "<style>\n"
+        "  .pagetopheader:hover{\n"
+        "      text-decoration: underline;\n"
+        "  }\n"
+        "  .pagetopheader {\n"
+        "      text-align: center;\n"
+        "      background-color: tomato;\n"
+        "      color: white;\n"
+        "      border: 4px solid black;\n"
+        "      margin: 40px;\n"
+        "      padding: 20px;\n"
+        "      font-size:46px;\n"
+        "  }</style>";
+    return styles;
+}
+
+std::string greetingPage(std::string params)
+{
+    std::string page = "<html><head>\n";
+    page += stylesheet();
+    page += "</head>\n";
+    page += "<body>\n";
+    page += "<div class=\"pagetopheader\">Hello World!</div>\n";
+    page += "<img src=\"/logoimg\" alt=\"logo image\">\n";
+    page += "<p>" + params +"</p>";
+    page += "</body></html>";
     return page;
 }
 
@@ -17,14 +43,14 @@ int main(void)
     {
         // По запросу к адресу "/hi" Вернуть текст как страницу
         std::cout << "Get /hi root subcommand\n"; //FIXME debug
-        std::string s;
-        s = greetingPage();
+        std::string s = "";
+
         for (auto p : req.params)
         {
             std::cout<<p.first<<":"<<p.second<<std::endl;
             s+= p.first + ":" + p.second + "\n";
         }
-        res.set_content(s, "text/html");
+        res.set_content(greetingPage(s), "text/html");
     });
 
     svr.Get("/", [](const Request &req, Response &res)
@@ -47,9 +73,9 @@ int main(void)
         {
             std::cout<<p.first<<":"<<p.second<<std::endl;
         }
-        std::cout<<"Path: "<<req.path<<std::endl;
-        std::cout<<"Method: "<<req.method<<std::endl;
-        std::cout<<"Target: "<<req.target<<std::endl;
+        std::cout<<"Path: "<<req.path<<std::endl;       //FIXME debug
+        std::cout<<"Method: "<<req.method<<std::endl;   //FIXME debug
+        std::cout<<"Target: "<<req.target<<std::endl;   //FIXME debug
     });
 
     //Команда запускает цикл так что в реальных проектах в отдельный процесс её
