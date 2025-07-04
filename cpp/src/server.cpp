@@ -10,7 +10,7 @@ std::string stylesheet()
         "  .pagetopheader:hover{\n"
         "      text-decoration: underline;\n"
         "  }\n"
-        "  .pagetopheader {\n"
+        "  .pagetopheader{\n"
         "      text-align: center;\n"
         "      background-color: tomato;\n"
         "      color: white;\n"
@@ -28,8 +28,8 @@ std::string greetingPage(std::string params)
     page += stylesheet();
     page += "</head>\n";
     page += "<body>\n";
-    page += "<div class=\"pagetopheader\">Hello World!</div>\n";
-    page += "<img src=\"/logoimg\" alt=\"logo image\">\n";
+    page += "<div class=\"pagetopheader\">";
+    page += "<img class=\"logo\" src=\"/logoimg\" alt=\"logo image\">Hello World!</div>\n";
     page += "<p>" + params +"</p>";
     page += "</body></html>";
     return page;
