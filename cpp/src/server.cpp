@@ -1,6 +1,8 @@
 
 #include <httplib.h>
 #include <iostream>
+#include "server.h"
+
 using namespace httplib;
 
 std::string greetingPage()
@@ -40,7 +42,7 @@ int main(void)
     ////////////////////////////////////////////////////////
     svr.Get("/[a-z]+", [](const Request &req, Response &res)
     {
-    std::cout << "unrecognized command to root\n";  //FIXME debug
+    std::cout << "unrecognized command to root page\n";  //FIXME debug
         // Other unrecognized commands to root
         res.set_content("Unrecognized command to root Page!", "text/plain"); //Текст для возврата и формат
         for (auto p : req.params)
@@ -53,6 +55,7 @@ int main(void)
     });
 
     //Команда запускает цикл так что в реальных проектах в отдельный процесс её
-    svr.listen("0.0.0.0", 8080); //  listen port 8080
+    printf("Starting on %s: %d\n", ourip, port);
+    svr.listen(ourip, port); //  listen port 8080
 
 }
