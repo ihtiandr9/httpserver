@@ -2,6 +2,14 @@
 #include <httplib.h>
 #include <iostream>
 #include "server.h"
+#include "dbclient.h"
+
+static void exit_nicely(int err)
+{
+    // close the connection to the database and cleanup
+    dbclose();
+    exit(err);
+}
 
 using namespace httplib;
 
@@ -13,6 +21,9 @@ std::string stylesheet()
         "      text-decoration: underline;\n"
         "  }\n"
         "  .pagetopheader {\n"
+        "      display: flex;\n"
+        "      align-items: center;\n"
+        "      justify-content: flex-start;\n"
         "      text-align: center;\n"
         "      background-color: tomato;\n"
         "      color: white;\n"
@@ -20,9 +31,36 @@ std::string stylesheet()
         "      margin: 40px;\n"
         "      padding: 20px;\n"
         "      font-size:46px;\n"
-        "  }</style>";
+        "  }\n"
+        "  .computers {\n"
+        "      width: 100%;\n"
+        "      border-collapse: collapse;\n"
+        "      margin: 20px 0;\n"
+        "  }\n"
+        "  .computers th, .computers td {\n"
+        "      border: 1px solid #333;\n"
+        "      padding: 8px 12px;\n"
+        "      text-align: left;\n"
+        "  }\n"
+        "  .computers th {\n"
+        "      background-color: #f5f5f5;\n"
+        "      font-weight: bold;\n"
+        "  }\n"
+        "  .computers tr:nth-child(even) {\n"
+        "      background-color: #f9f9f9;\n"
+        "  }\n"
+        "  .computers tr:hover {\n"
+        "      background-color: #e0e0e0;\n"
+        "  }\n"
+        "  .centered-text {\n"
+        "      flex: 1;                /* Занимает оставшееся пространство */\n"
+        "      text-align: center;     /* Центрирует текст */\n"
+        "  }\n"
+        // {{ конец новой таблицы }}
+        "</style>";
     return styles;
 }
+
 
 std::string greetingPage(std::string params)
 {
@@ -31,15 +69,29 @@ std::string greetingPage(std::string params)
     page += "</head>\n";
     page += "<body>\n";
     page += "<div class=\"pagetopheader\">";
-    page += "<img class=\"logo\" src=\"/logoimg\" alt=\"logo image\">Hello World!</div>\n";
-    page += "<p>" + params +"</p>";
+    page += "<img class=\"logo\" src=\"/logoimg\" alt=\"logo image\">";
+    page += "<div class=\"centered-text\">Hello World!</div></div>\n";
+    page += "<p>" + params + "</p>";
+    page += "<p>" + dbreport() + "</p>";
     page += "</body></html>";
     return page;
 }
 
-int main(void)
+int main(int argc, char* argv[])
 {
     Server svr;
+
+    if (argc < 2)
+    {
+        fprintf(stderr, "No password provided\n");
+        fprintf(stderr, "Usage: %s password\n", argv[0]);
+        exit_nicely(-1);
+    }
+
+    if (!(dbopen(argv[1]) == 0)) {
+        fprintf(stderr, "Cant open database\n");
+        exit_nicely(-1);
+    }
 
     svr.Get("/hi", [](const Request &req, Response &res)
     {
@@ -84,4 +136,6 @@ int main(void)
     printf("Starting on %s: %d\n", ourip, port);
     svr.listen(ourip, port); //  listen port 8080
 
+    exit_nicely(0);
+    return 0;
 }
