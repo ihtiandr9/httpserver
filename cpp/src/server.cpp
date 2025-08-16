@@ -2,8 +2,16 @@
 #include <httplib.h>
 #include <iostream>
 #include "server.h"
+#include "dbclient.h"
 
 using namespace httplib;
+
+static void exit_nicely(int err)
+{
+    /* close the connection to the database and cleanup */
+    dbclose();
+    exit(err);
+}
 
 std::string stylesheet()
 {
@@ -31,7 +39,7 @@ std::string greetingPage(std::string params)
     page += "</head>\n";
     page += "<body>\n";
     page += "<div class=\"pagetopheader\">";
-    page += "<img class=\"logo\" src=\"/logoimg\" alt=\"logo image\">Hello World!</div>\n";
+    page += "<img class=\"logo\" src=\"/logoimg\" alt=\"logo image\" style=\"display: inline-block\">Hello World!</div>\n";
     page += "<p>" + params +"</p>";
     page += "</body></html>";
     return page;

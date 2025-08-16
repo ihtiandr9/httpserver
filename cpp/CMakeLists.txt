@@ -14,7 +14,8 @@ project(httpserver)
     message(NOTICE ${CMAKE_SYSTEM_NAME})
 # http server target
     add_executable(httpserver
-        src/server.cpp)
+        src/server.cpp
+        src/dbclient.cpp)
     target_link_libraries(httpserver ${LIBS})
 # http client target
     add_executable(httpclient
