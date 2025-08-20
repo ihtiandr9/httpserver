@@ -1,22 +1,27 @@
 cmake_minimum_required(VERSION 3.5...3.11)
 project(httpserver)
 # Common options
-    include_directories(third_party/cpp-httplib
-        /usr/include
-        /usr/local/include
-        /usr/include/pgsql
-        /usr/include/postgresql)
-    link_directories(/usr/local/lib)
+    set(INCLUDE_DIRS third_party/cpp-httplib)
+    set(LIB_DIRS /usr/local/lib)
     add_definitions(-pthread -ggdb -O0)
-    set(LIBS pthread)
     if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux")
-        set(LIBS ${LIBS} )
+        set(LIBS pthread)
     elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "FreeBSD")
-        set(LIBS ${LIBS} )
-    else()
-        set(LIBS ${LIBS}  ws2_32)
+        set(LIBS pthread)
+    elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
+        set(LIBS pthread ws2_32)
     endif()
     message(NOTICE ${CMAKE_SYSTEM_NAME})
+# Поиск PostgreSQL через find_package
+    find_package(PostgreSQL REQUIRED)
+    include_directories(${INCLUDE_DIRS}
+        ${PostgreSQL_INCLUDE_DIRS})
+    link_directories(${LIB_DIRS})
+    
+    # Проверка результата поиска
+    if(NOT PostgreSQL_FOUND)
+        message(FATAL_ERROR "PostgreSQL не найден! Установите libpq-dev или аналог.")
+    endif()
 # http server target
     add_executable(httpserver
         src/dbclient.cpp
