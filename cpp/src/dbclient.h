@@ -10,9 +10,10 @@ extern "C" {
 }
 #endif
 
+#define default_dbhost "localhost";
 PGconn* dbconn();
 void dbclose();
-int dbopen(const char* passwd);
+int dbopen(const char* host, const char* passwd);
 std::string dbreport();
 
 #endif

@@ -25,10 +25,11 @@ void dbclose()
 
 
 int
-dbopen(const char* passwd)
+dbopen(const char* host, const char* passwd)
 {
 
-    sprintf(conninfo,"host=192.168.1.3 dbname=mycomps user=postgres password=%s connect_timeout=10",
+    sprintf(conninfo,"host=%s dbname=mycomps user=postgres password=%s connect_timeout=10",
+        host,
         passwd
     );
 
