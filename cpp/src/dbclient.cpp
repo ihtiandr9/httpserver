@@ -94,9 +94,14 @@ std::string dbreport()
     }
     PQclear(res);
 
-    res = PQexec(conn,	"SELECT * from computers as computers"
-			" LEFT JOIN comp_configs as comp_configs"
-			" ON computers.code = comp_configs.comp_code");
+    res = PQexec(conn,	"SELECT comp.code,"
+    "   comp.name,"
+    "   config.cpu,"
+    "   config.mb_ram,"
+    "   config.compose_date"
+    "   FROM computers comp"
+    "   LEFT JOIN comp_configs config ON comp.config = config.code"
+    "   ORDER BY comp.code");
     
     if (PQresultStatus(res) != PGRES_TUPLES_OK)
     {
