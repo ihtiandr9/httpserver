@@ -52,7 +52,7 @@ std::string dbreport()
     int         nFields;
     int         i,
                 j;
-    std::string result = "<table class=\"computers\">";                
+    std::string result = "<table class=\"computers\">\n";                
 
     if (conn == NULL) 
     {
@@ -107,20 +107,20 @@ std::string dbreport()
 
     /* first, print out the attribute names */
     nFields = PQnfields(res);
-    result += "<tr>";
+    result += INDENT "<tr>\n";
     for (i = 0; i < nFields; i++)
-        result += "<th>" + std::string(PQfname(res, i)) + "</th>";
-    result += "</tr>";
+        result += INDENT INDENT "<th>" + std::string(PQfname(res, i)) + "</th>\n";
+    result += INDENT "</tr>\n";
 
     /* next, print out the rows */
     for (i = 0; i < PQntuples(res); i++)
     {
         for (j = 0; j < nFields; j++)
             if (PQgetisnull(res, i, j))
-                result += "<td></td>";
+                result += INDENT INDENT "<td></td>\n";
             else
-                result += "<td>" + std::string(PQgetvalue(res, i, j)) + "</td>";
-        result += "</tr>";
+                result += INDENT INDENT "<td>" + std::string(PQgetvalue(res, i, j)) + "</td>\n";
+        result += INDENT "</tr>\n";
     }
 
     PQclear(res);

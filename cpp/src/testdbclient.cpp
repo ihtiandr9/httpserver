@@ -45,16 +45,10 @@ int main(int argc, char* argv[])
         switch (rez)
         {
             case 'h':
-            if (optarg)
-                {
-                    host = optarg;
-                }
+                host = optarg;
                 break;
             case 'p':
-            if (optarg)
-                {
-                    passwd = optarg;
-                }
+                passwd = optarg;
                 break;
             case 'v':
                 printf("V1.0\n");

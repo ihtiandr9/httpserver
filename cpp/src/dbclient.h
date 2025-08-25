@@ -1,5 +1,7 @@
 #ifndef H_DBCLIENT_H
 
+#define H_DBCLIENT_H
+#define INDENT "    "
 #ifdef __cplusplus
 extern "C" {
 #endif
