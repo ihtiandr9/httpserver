@@ -6,7 +6,7 @@
 extern "C" {
 #endif
 
-#include <libpq-fe.h>
+typedef struct pg_conn PGconn;
 
 #ifdef __cplusplus
 }

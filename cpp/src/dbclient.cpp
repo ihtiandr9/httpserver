@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <string>
 #include <stdlib.h>
+#include <libpq-fe.h>
 #include "dbclient.h"
 
 static PGconn     *conn;
