@@ -80,7 +80,7 @@ std::string greetingPage(std::string params)
 
 void usage(int panic){
     fprintf(stderr, "No password provided\n");
-    fprintf(stderr, "Usage: testdbclient [ -h | --host host] -p password\n");
+    fprintf(stderr, "Usage: httpserver [ -h | --host host] -p password\n");
     if (panic){
         exit_nicely(-1);
     }
